@@ -1,0 +1,38 @@
+flowchart LR
+    A["User opens SPA page"] --> B["Browser requests index.html from server"]
+    B --> C["Server returns index.html"]
+    C --> D["Browser loads index.js"]
+    D --> E["Browser fetches data.json"]
+    E --> F["Server reads notes.json and returns JSON"]
+    F --> G["Browser renders notes in the page"]
+    G --> H["User types a new note and clicks Save"]
+    H --> I["Browser sends POST /new_note with note"]
+    I --> J["Server reads notes.json"]
+    J --> K["Server appends new note and writes notes.json"]
+    K --> L{"Write successful?"}
+    L -- Yes --> M["Server responds success"]
+    L -- No --> N["Server responds with error"]
+    M --> O["Browser reloads notes from server to update UI"]
+    N --> P["Browser shows error message to user"]
+
+    A@{ shape: priority}
+    B@{ shape: diam}
+    D@{ shape: hex}
+    F@{ shape: rounded}
+    G@{ shape: diam}
+    I@{ shape: diam}
+     A:::Aqua
+     B:::Rose
+     E:::Aqua
+     G:::Sky
+     I:::Sky
+     L:::Aqua
+     M:::Pine
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+    classDef Aqua stroke-width:1px, stroke-dasharray:none, stroke:#46EDC8, fill:#DEFFF8, color:#378E7A
+    classDef Rose stroke-width:1px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
+    classDef Pine stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+    style B fill:#00C853,color:#000000
+    style D fill:#AA00FF,color:#FFFFFF
+    style L color:#2962FF
+    style N fill:#FF6D00
