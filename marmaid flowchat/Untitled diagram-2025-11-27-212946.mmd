@@ -1,0 +1,29 @@
+---
+config:
+  layout: dagre
+---
+flowchart LR
+    A["USER"] -- Types note and click Save --> B["BROWSER"]
+    B -- intercepts JavaScript and form submit event --> C("Note created")
+    C --> D["Post requested"]
+    D -- new note created and post sucessful --> O
+    E[SERVER] --creates--> O["Json"]
+    E --Server responds with 201 Created-->B
+    B--send a get request-->G[GET Request]
+    G--> E
+    E--get the note created on Json-->O
+    O-- get the new note -->E
+    E--displays the saved notes on the browser-->B
+    C --post req. fails-->G
+    G--Post req Fails and error mesg sent to the browser--> B
+
+
+    
+
+   
+   
+
+    A@{ shape: hex}
+    B@{ shape: rounded}
+    D@{ shape: loop-limit}
+    E@{ shape: display}

@@ -1,0 +1,9 @@
+flowchart TD
+    A[User types a note and clicks Save] --> B[JavaScript intercepts form submission]
+    B --> C[Browser sends POST /new_note_spa with note and timestamp]
+    C --> D[Server stores the note]
+    D --> E[Server responds with success]
+    E --> F[Updates internal state]
+    F --> G[SPA requests updated data GET /data.json]
+    G --> H[Server returns updated notes JSON]
+    H --> I[Browser updates UI without reloading the page]

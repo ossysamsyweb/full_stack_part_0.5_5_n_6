@@ -1,0 +1,87 @@
+flowchart TD
+
+    %% USER INPUT
+    A[User types a note in input field] --> B[User clicks Save]
+    B --> C[JavaScript intercepts and form submit event]
+    C --> D[Stop page reload]
+
+    %% BUILD NOTE
+    D --> E[Create note object and content + timestamp]
+
+    %% SEND POST
+    E --> F[Send POST /new_note_spa<br>via fetch()]
+    F --> G{POST successful?}
+
+    %% -- POST SUCCESS PATH --
+    G -->|Yes| H[Server stores note]
+    H --> I[Server responds with 201 Created]
+    I --> J[Success callback runs]
+
+    %% UPDATE LOCAL STATE
+    J --> K[SPA adds new note<br>to local state]
+    K --> L[SPA re-renders UI immediately]
+
+    %% SYNC WITH SERVER
+    L --> M[Send GET /data.json<br>to refresh state]
+    M --> N{GET successful?}
+
+    %% -- GET SUCCESS PATH --
+    N -->|Yes| O[Server returns updated JSON]
+    O --> P[SPA merges server notes<br>with local state]
+    P --> Q[Re-render UI with full synced list]
+    Q --> R[User sees updated notes<br>without page reload]
+
+    %% ======================================================
+    %% ERROR HANDLING BRANCHES
+    %% ======================================================
+
+    %% -- POST ERROR --
+    G -->|No| E1[POST error caught<br>(network/server failure)]
+    E1 --> E2[Show error message:<br>“Failed to save note.”]
+    E1 --> E3[Optionally retry button appears]
+
+    %% -- GET ERROR --
+    N -->|No| F1[GET error caught<br>(offline/server down)]
+    F1 --> F2[Show error message:<br>“Could not refresh notes.”]
+    F1 --> F3[UI still shows locally-added note<br>(may be out of sync)]
+
+    %% -- JSON PARSE ERROR --
+    O -->|Invalid JSON| G1[JSON parse error]
+    G1 --> G2[Show message:<br>“Invalid server data.”]
+    G2 --> G3[Keep current UI state]
+
+    %% END
+
+
+    <!-- reducing the alphabelt  -->
+
+    ---
+config:
+  layout: dagre
+---
+flowchart LR
+    A["USER"] -- Types note and click Save --> B["BROWSER"]
+    B -- intercepts JavaScript and form submit event --> C("Note created")
+    C --> D["Post requested"]
+    D -- new note created and post sucessful --> O
+    E[SERVER] --creates--> O["Json"]
+    E --Server responds with 201 Created-->B
+    B--send a get request-->G[GET Request]
+    G--> E
+    E--get the note created on Json-->O
+    O-- get the new note -->E
+    E--displays the saved notes on the browser-->B
+    C --post req. fails-->G
+    G--Post req Fails and error mesg sent to the browser--> B
+
+
+    
+
+   
+   
+
+    A@{ shape: hex}
+    B@{ shape: rounded}
+    D@{ shape: loop-limit}
+    E@{ shape: display}
+```
